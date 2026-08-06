@@ -1,56 +1,50 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mben-mer <mben-mer@student.42belgium.be>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/08/06 01:04:42 by mben-mer          #+#    #+#             */
+/*   Updated: 2026/08/06 01:38:47 by mben-mer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
-int is_digit(char c)
+int	is_digit(char c)
 {
-    return (c >= '0' && c <= '9');
+	return (c >= '0' && c <= '9');
 }
 
-int validate_arg(char *arg)
+int	validate_arg_int(char *arg)
 {
-    int len;
-    int i;
+	int	len;
+	int	i;
 
-    len = strlen(arg);
-    if(len > 9 || arg[0] == '\0')
-        return (-1);
-    i = 0;
-    while(i < len)
-    {
-        if (is_digit(arg[i]) == 0)
-        {
-            return (-1);
-        }
-        i++;
-    }
-    return (0);
+	len = strlen(arg);
+	if (len > 9 || arg[0] == '\0')
+		return (-1);
+	i = 0;
+	while (i < len)
+	{
+		if (is_digit(arg[i]) == 0)
+		{
+			return (-1);
+		}
+		i++;
+	}
+	return (0);
 }
 
-int validate_scheduler(char *arg)
+int	is_fifo(char *arg)
 {
-    char fifo[5];
-    char edf[4];
-    int i;
-    int j;
-    int k;
+	return (strcmp(arg, "fifo"));
+}
 
-    fifo[5] = "fifo";
-    edf[4] = "edf";
-    i = 0;
-    j = 0;
-    k = 0;
-    while(i < strlen(arg) && j < strlen(fifo) && k < strlen(edf))
-    {
-        if (arg[i] == fifo[j])
-            j++;
-        else if (arg[i] == edf[k])
-            k++;
-        i++;
-    }
-    if (k == i)
-        return (1);
-    else if (j == i)
-        return (2);
-    return (0);
+int	is_edf(char *arg)
+{
+	return (strcmp(arg, "edf"));
 }
 
 static const char	*arg_name(int index)
@@ -58,41 +52,55 @@ static const char	*arg_name(int index)
 	static const char	*names[7] = {
 		"number_of_coders",
 		"time_to_burnout",
-		"time_to_compile",
-		"time_to_debug",
-		"time_to_refactor",
-		"number_of_compiles_required",
-		"dongle_cooldown"
-	};
+		"time_to_compile", "time_to_debug",
+		"time_to_refactor", "number_of_compiles_required",
+		"dongle_cooldown"};
 
 	if (index < 0 || index > 6)
 		return ("unknown");
 	return (names[index]);
 }
 
-int main(int ac, char **argv)
+void	display_error_length_args(int ac, char **argv)
 {
-    int i;
-    int result;
-    int j;
+	fprintf(stderr, "Error: expected 8 arguments, got %d\n", ac - 1);
+	fprintf(stderr, "Usage: %s number_of_coders "
+		"time_to_burnout time_to_compile "
+		"time_to_debug time_to_refactor number_of_compiles_required "
+		"dongle_cooldown scheduler\n", argv[0]);
+}
 
-    if(ac != 9)
-    {
-        fprintf(stderr, "Error: expected 8 arguments, got %d\n", ac - 1);
-        fprintf(stderr, "Usage: %s number_of_coders time_to_burnout time_to_compile "
-            "time_to_debug time_to_refactor number_of_compiles_required "
-             "dongle_cooldown scheduler\n", argv[0]);
-        return (-1);
-    }
-    i = 1;
-    while(i <= 7)
-    {
-        result = validate_arg(argv[i]);
-        if (result == -1)
-        {
-            fprintf(stderr, "Error: %s must be a positive integer (max 9 digits), got \"%s\"\n", arg_name(i - 1),argv[i]);
-            return (-1);
-        }
-        i++;
-    }
+int	validate_arguments(int ac, char **argv)
+{
+	int	i;
+
+	if (ac != 9)
+	{
+		display_error_length_args(ac, argv);
+		return (-1);
+	}
+	i = 1;
+	while (i <= 7)
+	{
+		if (validate_arg_int(argv[i]) == -1)
+		{
+			fprintf(stderr, "Error: %s must be a positive integer "
+				"(max 9 digits), got \"%s\"\n", arg_name(i - 1), argv[i]);
+			return (-1);
+		}
+		i++;
+	}
+	if (is_fifo(argv[8]) != 0 && is_edf(argv[8]) != 0)
+	{
+		fprintf(stderr, "Error: scheduler must be \"fifo\" "
+			"or \"edf\", got \"%s\"\n", argv[8]);
+		return (-1);
+	}
+	return (0);
+}
+
+int	main(int ac, char **argv)
+{
+	if (validate_arguments(ac, argv) == -1)
+		return (0);
 }
