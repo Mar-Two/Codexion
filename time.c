@@ -1,6 +1,6 @@
 #include "header.h"
 
-long    current_time()
+long	current_time()
 {
     struct timeval tv;
     
@@ -14,13 +14,14 @@ void    sleep_time(long sleep)
     cible = current_time() + sleep;
     while(current_time() < cible)
     {
-        printf("%ld\n", current_time());
         usleep(100);
     }
-
 }
 
-int main()
+long	timestamp(long start_time)
 {
-    sleep_time(200);
+	long result;
+
+	result = current_time() - start_time;
+	return (result);
 }
