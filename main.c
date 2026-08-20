@@ -12,13 +12,14 @@ int	main(int ac, char **argv)
 	if (!data)
 		return (1);
 	memset(data, 0, sizeof(t_data));
-
 	if (init_structures(data, argv) == 1)
 	{
 		free_structures(data);
 		return (1);
 	}
-	pthread_mutex_destroy(&data->print_mutex);
+	create_threads(data);
+	create_monitor(data);
+	join_threads(data);
 	free_structures(data);
 	return (0);
 }

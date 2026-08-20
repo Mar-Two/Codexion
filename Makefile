@@ -1,7 +1,7 @@
 CC = cc
 NAME = codexion
 CFLAGS = -Wall -Wextra -Werror -pthread -g
-SRC = main.c parsing.c init_structures.c threads.c threads2.c time.c
+SRC = main.c parsing.c init_structures.c threads.c threads2.c time.c heap.c
 OBJS = $(SRC:.c=.o)
 RM = rm -f
 

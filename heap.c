@@ -10,6 +10,13 @@ int init_heap(t_heap *heap, int capacity)
     return 0;
 }
 
+static int	passes_before(t_request *a, t_request *b)
+{
+    if (a->key < b->key || (a->key == b->key && a->id < b->id))
+        return 1;
+    return 0;
+}
+
 int insertion(t_heap *heap, t_request *request)
 {
     t_request tmp;
@@ -21,7 +28,7 @@ int insertion(t_heap *heap, t_request *request)
     tab = heap->tab;
     size = heap->size;
     tab[size] = *request;
-    while (size > 0 && tab[size].key < tab[(size - 1) / 2].key)
+    while (size > 0 && passes_before(&tab[size], &tab[(size - 1) / 2]))
     {
         tmp = tab[size];
         tab[size] = tab[(size - 1) / 2];
@@ -47,14 +54,12 @@ int extract_min(t_heap *heap, t_request *out)
     while (1)
     {
         smallest = i;
-        if ((2 * i) + 1 < heap->size && heap->tab[(2 * i) + 1].key < heap->tab[i].key)
-        {
-            smallest = (2 * i) + 1;
-        }
-        if ((2 * i) + 2 < heap->size && heap->tab[(2 * i) + 2].key < heap->tab[smallest].key)
-        {
-            smallest = (2 * i) + 2;
-        }
+        if ((2 * i) + 1 < heap->size
+        && passes_before(&heap->tab[(2 * i) + 1], &heap->tab[i]))
+	        smallest = (2 * i) + 1;
+        if ((2 * i) + 2 < heap->size
+        && passes_before(&heap->tab[(2 * i) + 2], &heap->tab[smallest]))
+	        smallest = (2 * i) + 2;
         if (smallest == i)
             break ;
         tmp = heap->tab[i];
@@ -73,6 +78,7 @@ int consultation(t_heap *heap, t_request *out)
     return (0);
 }
 
+/*
 int main(void)
 {
     t_heap heap;
@@ -101,4 +107,4 @@ int main(void)
         i++;
     }
 
-}
+}*/
