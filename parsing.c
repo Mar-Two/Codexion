@@ -60,15 +60,10 @@ void	display_error_length_args(int ac, char **argv)
 		"dongle_cooldown scheduler\n", argv[0]);
 }
 
-int	validate_arguments(int ac, char **argv)
+int	validate_arguments(char **argv)
 {
 	int	i;
 
-	if (ac != 9)
-	{
-		display_error_length_args(ac, argv);
-		return (-1);
-	}
 	i = 1;
 	while (i <= 7)
 	{
@@ -76,7 +71,7 @@ int	validate_arguments(int ac, char **argv)
 		{
 			fprintf(stderr, "Error: %s must be a positive integer "
 				"(max 9 digits), got \"%s\"\n", arg_name(i - 1), argv[i]);
-			return (-1);
+			return (1);
 		}
 		i++;
 	}
@@ -84,13 +79,13 @@ int	validate_arguments(int ac, char **argv)
 	{
 		fprintf(stderr, "Error: numbers_of_coders must be greater "
 			"than 0, got \"%s\"\n", argv[1]);
-		return (-1);
+		return (1);
 	}
 	if (strcmp(argv[8], "fifo") != 0 && strcmp(argv[8], "edf") != 0)
 	{
 		fprintf(stderr, "Error: scheduler must be \"fifo\" "
 			"or \"edf\", got \"%s\"\n", argv[8]);
-		return (-1);
+		return (1);
 	}
 	return (0);
 }

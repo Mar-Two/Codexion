@@ -54,6 +54,7 @@ struct s_data
 	t_coder			*coders;
 	t_dongle		*dongles;
 	long			start_time;
+	long			start_time_us;
 	pthread_t		*threads;
 	pthread_t		monitor;
 	pthread_mutex_t	dongle_mutex;
@@ -85,10 +86,12 @@ int	is_digit(char c);
 int	validate_arg_int(char *arg);
 void	display_error_length_args(int ac, char **argv);
 void	display_error_length_args(int ac, char **argv);
-int	validate_arguments(int ac, char **argv);
+int	validate_arguments(char **argv);
 long	current_time();
+long	current_time_us(void);
 void    sleep_time(long sleep);
 long	timestamp(long start_time);
+long	timestamp_us(long start_time_us);
 int	init_data(t_data *data, char **argv);
 int	init_coders(t_data *data);
 int	init_dongles(t_data *data);
@@ -108,7 +111,7 @@ void	*routine(void *arg);
 int		init_heap(t_heap *heap, int capacity);
 int		insertion(t_heap *heap, t_request *request);
 int		consultation(t_heap *heap, t_request *out);
-int		extract_min(t_heap *heap, t_request *out);
+int		extract_min(t_heap *heap);
 void 	*monitor_routine(void *arg);
 
 #endif

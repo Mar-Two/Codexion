@@ -6,7 +6,12 @@ int	main(int ac, char **argv)
 	t_data	*data;
 	data = NULL;
 
-	if (validate_arguments(ac, argv) == -1)
+	if (ac != 9)
+	{
+		display_error_length_args(ac, argv);
+		return (1);
+	}
+	if (validate_arguments(argv) == 1)
 		return (1);
 	data = malloc(sizeof(t_data));
 	if (!data)

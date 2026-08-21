@@ -39,7 +39,7 @@ int insertion(t_heap *heap, t_request *request)
     return 0;
 }
 
-int extract_min(t_heap *heap, t_request *out)
+int extract_min(t_heap *heap)
 {
     int i;
     t_request tmp;
@@ -47,7 +47,6 @@ int extract_min(t_heap *heap, t_request *out)
 
     if (heap->size == 0)
         return 1;
-    *out = heap->tab[0];
     heap->tab[0] = heap->tab[heap->size - 1];
     heap->size -= 1;
     i = 0;
