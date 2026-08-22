@@ -1,11 +1,11 @@
 #include "header.h"
 
-int malloc_threads(t_data *data)
+int alloc_threads(t_data *data)
 {
 	data->threads = malloc(sizeof(pthread_t) * data->number_of_coders);
 	if (!data->threads)
 		return (1);
-	return 0;
+	return (0);
 }
 
 void	create_threads(t_data *data)

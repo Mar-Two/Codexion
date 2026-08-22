@@ -82,36 +82,37 @@ struct s_dongle
 };
 
 
-int	is_digit(char c);
-int	validate_arg_int(char *arg);
-void	display_error_length_args(int ac, char **argv);
-void	display_error_length_args(int ac, char **argv);
-int	validate_arguments(char **argv);
-long	current_time();
+int		is_digit(char c);
+int		is_valid_number(char *arg);
+void	print_usage_error(int ac, char **argv);
+int		validate_arguments(char **argv);
+long	current_time(void);
 long	current_time_us(void);
 void    sleep_time(long sleep);
 long	timestamp(long start_time);
 long	timestamp_us(long start_time_us);
-int	init_data(t_data *data, char **argv);
-int	init_coders(t_data *data);
-int	init_dongles(t_data *data);
-int malloc_threads(t_data *data);
-void	create_threads(t_data *data);
-void create_monitor(t_data *data);
-void	join_threads(t_data *data);
+int		init_data(t_data *data, char **argv);
+int		init_coders(t_data *data);
+int		init_dongles(t_data *data);
 int		init_structures(t_data *data, char **argv);
 void	free_structures(t_data *data);
-void	one_coder_in_table(t_coder *coder);
+int 	alloc_threads(t_data *data);
+void	create_threads(t_data *data);
+void 	create_monitor(t_data *data);
+void	join_threads(t_data *data);
+void	take_single_dongle(t_coder *coder);
 int		try_take_dongles(t_coder *coder);
-void	coder_is_compiling(t_coder *coder);
+int		coder_is_compiling(t_coder *coder);
 void	drop_dongles(t_coder *coder);
-void	coder_is_debugging(t_coder *coder);
-void	coder_is_refactoring(t_coder *coder);
+int		coder_is_debugging(t_coder *coder);
+int		coder_is_refactoring(t_coder *coder);
 void	*routine(void *arg);
-int		init_heap(t_heap *heap, int capacity);
-int		insertion(t_heap *heap, t_request *request);
-int		consultation(t_heap *heap, t_request *out);
-int		extract_min(t_heap *heap);
+int		heap_init(t_heap *heap, int capacity);
+int		heap_push(t_heap *heap, t_request *request);
+int		heap_peek(t_heap *heap, t_request *out);
+int		heap_pop(t_heap *heap);
+void	wait_for_dongles(t_coder *coder);
+int		predicate(t_coder *coder);
 void 	*monitor_routine(void *arg);
 
 #endif

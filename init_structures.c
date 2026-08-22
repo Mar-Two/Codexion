@@ -61,7 +61,7 @@ int	init_dongles(t_data *data)
 		data->dongles[i].id = i;
 		data->dongles[i].taken_by = -1;
 		data->dongles[i].available_at = 0;
-		if(init_heap(&data->dongles[i].heap, data->number_of_coders) == 1)
+		if(heap_init(&data->dongles[i].heap, data->number_of_coders) == 1)
 			return 1;
 		i++;
 	}
@@ -76,7 +76,7 @@ int	init_structures(t_data *data, char **argv)
 		return (1);
 	if (init_dongles(data) == 1)
 		return (1);
-	if (malloc_threads(data) == 1)
+	if (alloc_threads(data) == 1)
 		return (1);
 	return (0);
 }
@@ -100,119 +100,3 @@ void	free_structures(t_data *data)
 	free(data->coders);
 	free(data);
 }
-
-/*
-static void condition_stop(t_data *data, int *indexcoder, int *count, int i)
-{
-	pthread_mutex_lock(&data->coders[i].coder_mutex);
-	if (data->coders[i].nb_compiles >= data->number_of_compiles_required)
-		(*count)++;
-	if (timestamp(data->start_time) - data->coders[i].last_compile_start > data->time_to_burnout)
-		*indexcoder = i;
-	pthread_mutex_unlock(&data->coders[i].coder_mutex);
-}
-
-static void handle_burnout(t_data *data, int indexcoder)
-{
-	pthread_mutex_lock(&data->print_mutex);
-	printf("%ld %d burned out\n", timestamp(data->start_time), indexcoder + 1);
-	pthread_mutex_unlock(&data->print_mutex);
-	pthread_mutex_lock(&data->dongle_mutex);
-	data->stop = 1;
-	pthread_cond_broadcast(&data->condvar);
-	pthread_mutex_unlock(&data->dongle_mutex);
-}
-
-static void stop_simulation(t_data *data)
-{
-	pthread_mutex_lock(&data->dongle_mutex);
-	data->stop = 1;
-	pthread_cond_broadcast(&data->condvar);
-	pthread_mutex_unlock(&data->dongle_mutex);
-}
-
-static void check_coders(t_data *data, int *indexcoder, int *count)
-{
-	int	i;
-
-	i = 0;
-	while(i < data->number_of_coders)
-	{
-		pthread_mutex_lock(&data->coders[i].coder_mutex);
-		if (data->coders[i].nb_compiles >= data->number_of_compiles_required)
-			(*count)++;
-		if (timestamp(data->start_time) - data->coders[i].last_compile_start > data->time_to_burnout)
-			*indexcoder = i;
-		pthread_mutex_unlock(&data->coders[i].coder_mutex);
-		i++;
-	}
-}
-
-void *monitor_routine(void *arg)
-{
-	t_data *data;
-	int count;
-	int indexcoder;
-
-	data = (t_data*) arg;
-	indexcoder = -1;
-	while(1)
-	{
-		count = 0;
-		check_coders(data, &indexcoder, &count);
-		if (indexcoder != -1)
-		{
-			handle_burnout(data, indexcoder);
-			break;
-		}
-		else if(count == data->number_of_coders)
-		{
-			stop_simulation(data);
-			break;
-		}
-		sleep_time(1);
-	}
-	return (NULL);
-}
-*/
-
-/*
-int malloc_threads(t_data *data)
-{
-	data->threads = malloc(sizeof(pthread_t) * data->number_of_coders);
-	if (!data->threads)
-		return (1);
-	return 0;
-}
-
-void	create_threads(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	while (i < data->number_of_coders)
-	{
-		pthread_create(&data->threads[i], NULL, routine, &data->coders[i]);
-		i++;
-	}
-}
-
-void create_monitor(t_data *data)
-{
-	pthread_create(&data->monitor, NULL, monitor_routine, data);
-}
-	
-void join_threads(t_data *data)
-{
-	int i;
-
-	i = 0;
-	pthread_join(data->monitor, NULL);
-	while (i < data->number_of_coders)
-	{
-		pthread_join(data->threads[i], NULL);
-		i++;
-	}
-}
-*/
-

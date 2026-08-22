@@ -17,7 +17,7 @@ int	is_digit(char c)
 	return (c >= '0' && c <= '9');
 }
 
-int	validate_arg_int(char *arg)
+int	is_valid_number(char *arg)
 {
 	int	len;
 	int	i;
@@ -51,7 +51,7 @@ static const char	*arg_name(int index)
 	return (names[index]);
 }
 
-void	display_error_length_args(int ac, char **argv)
+void	print_usage_error(int ac, char **argv)
 {
 	fprintf(stderr, "Error: expected 8 arguments, got %d\n", ac - 1);
 	fprintf(stderr, "Usage: %s number_of_coders "
@@ -67,7 +67,7 @@ int	validate_arguments(char **argv)
 	i = 1;
 	while (i <= 7)
 	{
-		if (validate_arg_int(argv[i]) == -1)
+		if (is_valid_number(argv[i]) == -1)
 		{
 			fprintf(stderr, "Error: %s must be a positive integer "
 				"(max 9 digits), got \"%s\"\n", arg_name(i - 1), argv[i]);

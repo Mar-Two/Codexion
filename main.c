@@ -8,7 +8,7 @@ int	main(int ac, char **argv)
 
 	if (ac != 9)
 	{
-		display_error_length_args(ac, argv);
+		print_usage_error(ac, argv);
 		return (1);
 	}
 	if (validate_arguments(argv) == 1)
