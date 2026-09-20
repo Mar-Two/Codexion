@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   monitor.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mben-mer <mben-mer@student.42belgium.be>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/17 16:05:17 by mben-mer          #+#    #+#             */
+/*   Updated: 2026/09/17 17:24:18 by mben-mer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 static void	handle_burnout(t_data *data, int indexcoder)
@@ -24,12 +36,14 @@ static void	check_coders(t_data *data, int *indexcoder, int *count)
 	int	i;
 
 	i = 0;
-	while(i < data->number_of_coders)
+	while (i < data->number_of_coders)
 	{
 		pthread_mutex_lock(&data->coders[i].coder_mutex);
 		if (data->coders[i].nb_compiles >= data->number_of_compiles_required)
 			(*count)++;
-		if (timestamp(data->start_time) - data->coders[i].last_compile_start >= data->time_to_burnout)
+		if ((timestamp_us(data->start_time_us)
+				- data->coders[i].last_compile_start) / 1000
+			> data->time_to_burnout)
 			*indexcoder = i;
 		pthread_mutex_unlock(&data->coders[i].coder_mutex);
 		i++;
@@ -38,26 +52,25 @@ static void	check_coders(t_data *data, int *indexcoder, int *count)
 
 void	*monitor_routine(void *arg)
 {
-	t_data *data;
-	int count;
-	int indexcoder;
+	t_data	*data;
+	int		count;
+	int		indexcoder;
 
-	data = (t_data*) arg;
+	data = (t_data *) arg;
 	indexcoder = -1;
-
-	while(1)
+	while (1)
 	{
 		count = 0;
 		check_coders(data, &indexcoder, &count);
-		if (indexcoder != -1)
-		{
-			handle_burnout(data, indexcoder);
-			break;
-		}
-		else if(count == data->number_of_coders)
+		if (count == data->number_of_coders)
 		{
 			stop_simulation(data);
-			break;
+			break ;
+		}
+		else if (indexcoder != -1)
+		{
+			handle_burnout(data, indexcoder);
+			break ;
 		}
 		sleep_time(1);
 	}

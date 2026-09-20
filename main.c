@@ -1,11 +1,22 @@
-#include "header.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mben-mer <mben-mer@student.42belgium.be>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/17 16:03:37 by mben-mer          #+#    #+#             */
+/*   Updated: 2026/09/17 16:04:47 by mben-mer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "header.h"
 
 int	main(int ac, char **argv)
 {
 	t_data	*data;
-	data = NULL;
 
+	data = NULL;
 	if (ac != 9)
 	{
 		print_usage_error(ac, argv);

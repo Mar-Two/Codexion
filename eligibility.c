@@ -1,41 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   heap.c                                             :+:      :+:    :+:   */
+/*   eligibility.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mben-mer <mben-mer@student.42belgium.be>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/08/06 17:20:22 by mben-mer          #+#    #+#             */
+/*   Created: 2026/09/17 18:00:00 by mben-mer          #+#    #+#             */
 /*   Updated: 2026/09/17 18:00:00 by mben-mer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "header.h"
 
-int	heap_init(t_heap *heap, int capacity)
+int	is_servable(t_coder *c)
 {
-	heap->tab = malloc(sizeof(t_request) * capacity);
-	if (!heap->tab)
-		return (1);
-	heap->size = 0;
-	heap->capacity = capacity;
-	return (0);
+	long	now;
+
+	now = timestamp_us(c->data->start_time_us);
+	if (c->data->dongles[c->left_dongle].taken_by != -1)
+		return (0);
+	if (c->data->dongles[c->right_dongle].taken_by != -1)
+		return (0);
+	if (now < c->data->dongles[c->left_dongle].available_at)
+		return (0);
+	if (now < c->data->dongles[c->right_dongle].available_at)
+		return (0);
+	return (1);
 }
 
-int	heap_push(t_heap *heap, t_request *request)
+int	grants_to_me(t_coder *coder, int d)
 {
-	if (heap->size == heap->capacity)
-		return (1);
-	heap->tab[heap->size] = *request;
-	heap->size += 1;
-	sift_up(heap, heap->size - 1);
-	return (0);
-}
+	t_request	head;
 
-int	heap_peek(t_heap *heap, t_request *out)
-{
-	if (heap->size == 0)
+	if (heap_peek(&coder->data->dongles[d].heap, &head) == 1)
 		return (1);
-	*out = heap->tab[0];
-	return (0);
+	if (head.id == coder->id)
+		return (1);
+	return (!is_servable(&coder->data->coders[head.id - 1]));
 }

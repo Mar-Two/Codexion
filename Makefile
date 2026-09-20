@@ -1,8 +1,8 @@
 CC = cc
 NAME = codexion
-CFLAGS = -Wall -Wextra -Werror -pthread -g
+CFLAGS = -Wall -Wextra -Werror -pthread
 OBJDIR = obj
-SRC = main.c parsing.c init_structures.c init_threads.c time.c heap.c monitor.c predicate.c acquisition.c coder_cycle.c routine.c
+SRC = main.c eligibility.c heap2.c parsing.c parsing2.c init_structures.c init_threads.c time.c heap.c monitor.c predicate.c acquisition.c coder_cycle.c routine.c
 OBJS = $(addprefix $(OBJDIR)/, $(SRC:.c=.o))
 RM = rm -f
 

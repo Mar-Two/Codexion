@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_structures.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mben-mer <mben-mer@student.42belgium.be>   +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/09/17 16:00:29 by mben-mer          #+#    #+#             */
+/*   Updated: 2026/09/17 16:02:08 by mben-mer         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "header.h"
 
 int	init_data(t_data *data, char **argv)
@@ -61,8 +73,8 @@ int	init_dongles(t_data *data)
 		data->dongles[i].id = i;
 		data->dongles[i].taken_by = -1;
 		data->dongles[i].available_at = 0;
-		if(heap_init(&data->dongles[i].heap, data->number_of_coders) == 1)
-			return 1;
+		if (heap_init(&data->dongles[i].heap, data->number_of_coders) == 1)
+			return (1);
 		i++;
 	}
 	return (0);
@@ -83,13 +95,15 @@ int	init_structures(t_data *data, char **argv)
 
 void	free_structures(t_data *data)
 {
-	int i;
+	int	i;
 
 	i = 0;
-	while(i < data->number_of_coders)
+	while (i < data->number_of_coders)
 	{
-		free(data->dongles[i].heap.tab);
-		pthread_mutex_destroy(&data->coders[i].coder_mutex);
+		if (data->dongles)
+			free(data->dongles[i].heap.tab);
+		if (data->coders)
+			pthread_mutex_destroy(&data->coders[i].coder_mutex);
 		i++;
 	}
 	pthread_mutex_destroy(&data->dongle_mutex);
