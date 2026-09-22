@@ -29,7 +29,6 @@ typedef struct s_heap		t_heap;
 struct s_request
 {
 	int		id;
-	int		done;
 	long	key;
 };
 

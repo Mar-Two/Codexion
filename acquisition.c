@@ -27,7 +27,6 @@ static void	build_request(t_coder *coder, t_request *request)
 {
 	pthread_mutex_lock(&coder->coder_mutex);
 	request->id = coder->id;
-	request->done = coder->nb_compiles;
 	if (coder->data->fifo == 1)
 		request->key = timestamp_us(coder->data->start_time_us);
 	else
