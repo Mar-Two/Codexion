@@ -84,8 +84,6 @@ When a coder releases its dongles, it updates the state and issues a `pthread_co
 
 **Ordering within a compilation.** `stop` is tested before `nb_compiles` is incremented and before `last_compile_start` is written, so a compilation cannot be counted after the simulation has stopped.
 
-These points were checked with ThreadSanitizer (`-fsanitize=thread`), which reports no data race and no lock-order inversion.
-
 ## Technical choices
 
 **A single mutex over the allocation state.** The subject asks that each dongle's state be protected by a mutex. A per-dongle mutex would make registration in both queues non-atomic: `pthread_cond_wait` releases only one mutex, so a coder falling asleep while holding two would block a neighbour indefinitely. Releasing one before sleeping reopens the window where a coder is registered in one queue but not the other — which allows a livelock where two coders are each at the head of one queue and neither can proceed. The single mutex makes the ordering of the two queues observable as a whole. The trade-off is reduced concurrency during acquisition, which is acceptable since critical sections are short and all actual work happens outside them.
